@@ -101,14 +101,18 @@ Note: It may take some time to run userdata script after you connect to server. 
 
 ### Step-4: Create Private Hosted Zone in Route53
 Our backend stack is running. Next we will update Private IP of our backend services in Route53 Private DNS Zone.Lets note down Private IP addresses.
-rmq01 172.31.80.20<br>
-db01 172.31.22.178<br>
-mc01 172.31.87.132<br>
+rmq01 172.31.86.205<br>
+db01 172.31.89.238<br>
+mc01 172.31.89.107<br>
 Create vprofile.in Private Hosted zone in Route53. we will pick Default VPC in N.Virginia region
+![db01_record](https://user-images.githubusercontent.com/73986565/210995278-ac44ddf5-8f77-4ea2-9995-685e9d88644f.PNG)
+
 - &nbsp;Now we will create records for our backend services. The purpose of this activity is we will use these record names in our application.properties file. Even if IP address of the services, our application won't need to change the config file.<br>
 Simple Routing -> Define Simple Record<br>
 Value/Route traffic to: IP address or another value
-
+![hosted_zone](https://user-images.githubusercontent.com/73986565/210992778-b80033da-2367-4d55-a1ca-6cc423ebe131.PNG)
+Details of records
+![hosted_zone_details](https://user-images.githubusercontent.com/73986565/210993575-d92218b1-7953-40ad-8a76-c0fdaa3c3e32.PNG)
 ### Step-5: Provision Application EC2 instances with UserData script
 Create Tomcat instance with below details.We will also add Inbound rule to vprofile-app-SG for SSH on port 22 from MyIP to be able to connect our db instance via SSH.
 Name: vprofile-app01
