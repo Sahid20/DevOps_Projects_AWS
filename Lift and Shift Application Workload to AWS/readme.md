@@ -159,6 +159,7 @@ Policy: s3FullAccess<br>
 Type: EC2<br>
 Name: vprofile-artifact-storage-role<br>
 Policy: s3FullAccess<br>
+![artifact_roles](https://user-images.githubusercontent.com/73986565/211116007-9d09382f-bfde-4213-8c01-cb506b838ac9.PNG)
 Before we login to our server, we need to add SSH access on port 22 to our vprofile-app-SG.<br>
 
 Then connect to app011 Ubuntu server.
