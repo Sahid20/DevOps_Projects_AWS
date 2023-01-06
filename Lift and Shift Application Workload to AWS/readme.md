@@ -146,10 +146,12 @@ mvn install
 name: vprofile-s3-admin<br>
 Access key - Programmatic access<br>
 Policy: s3FullAccess<br>
+![iam](https://user-images.githubusercontent.com/73986565/210998323-863f99d9-eb32-46dd-96f5-3facf53c9647.PNG)
+
 - &nbsp;Create bucket. Note: S3 buckets are global so the naming must be UNIQUE!
 - &nbsp;Go to target directory and copy the artifact to bucket with below command. Then verify by listing objects in the bucket
 - &nbsp;We can verify the same from AWS Console.
-
+![s3bucket](https://user-images.githubusercontent.com/73986565/210998620-517e0467-a8f2-4543-92a8-3f5009e91daa.PNG)
 
 ### Step-8: Download Artifact to Tomcat server from S3
 - &nbsp;In order to download our artifact onto Tomcat server, we need to create IAM role for Tomcat. Once role is created we will attach it to our app01 server.
@@ -203,7 +205,7 @@ Select the certificate for HTTPS<br>
 - &nbsp;We will create an A record with alias to ALB so that we can use our domain name to reach our application.Lets check our application using our DNS.
 - 
  We can securely connect to our application!
-- 
+![admin](https://user-images.githubusercontent.com/73986565/210998890-b4c53582-3f6a-4c36-9b05-fc0c7619324c.PNG)
 ### Step-11: Configure AutoScaling Group for Application Instances
 - &nbsp;We will create an AMI from our App Instance.
 Next we will create a Launch template using the AMI created in above step for our ASG.
