@@ -79,6 +79,9 @@ sudo -i
 curl http://169.254.169.254/latest/user-data<br>
 systemctl status memcached.service<br>
 ss -tunpl | grep 11211<br>
+![memcached_status](https://user-images.githubusercontent.com/73986565/210988528-641cca3f-3c69-4084-b105-ef530193e61b.PNG)
+
+
 #### RabbitMQ Instance:
 Create RabbitMQ instance with below details.<br>
 Name: vprofile-rmq01<br>
@@ -92,6 +95,8 @@ ssh -i vprofile-prod-key.pem centos@<public_ip_of_instance><br>
 sudo -i<br>
 curl http://169.254.169.254/latest/user-data<br>
 systemctl status rabbitmq-server<br>
+![rabbitmq_status](https://user-images.githubusercontent.com/73986565/210989844-a9116822-5dfd-4201-8cd0-81e44499dcdf.PNG)
+
 Note: It may take some time to run userdata script after you connect to server. You can check the process ps -ef to see if the process start for service. If not wait sometime and check with systemctl status <service_name> command again
 
 ### Step-4: Create Private Hosted Zone in Route53
