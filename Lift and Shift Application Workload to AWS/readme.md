@@ -62,6 +62,7 @@ ssh -i vprofile-prod-key.pem centos@<public_ip_of_instance> <br>
 sudo -i  <br>
 curl http://169.254.169.254/latest/user-data <br>
 systemctl status mariadb <br>
+
 ![mariadb_status](https://user-images.githubusercontent.com/73986565/210983682-1d98a883-a72b-4135-8df2-a8fb7f4966fd.PNG)
 
 #### Memcached Instance:
