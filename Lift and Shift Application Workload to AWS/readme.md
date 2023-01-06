@@ -133,10 +133,10 @@ jdbc.url=jdbc:mysql://db01.vprofile.in:3306/accounts?useUnicode=true&<br>
 memcached.active.host=mc01.vprofile.in<br>
 
 rabbitmq.address=rmq01.vprofile.in<br>
-We will go to vprofile-project root directory to the same level pom.xml exists. Then we will execute below command to create our artifact vprofile-v2.war:
+We will go to vprofile-project root directory to the same level pom.xml exists. Then we will execute below command to create our artifact vprofile-v2.war:<br>
 mvn install
 
-
+![buid_test](https://user-images.githubusercontent.com/73986565/211115024-92ad079d-74c1-4b9c-a905-3dd9b55c415d.PNG)
 
 ### Step-7: Create S3 bucket using AWS CLI, copy artifact
 - &nbsp;We will upload our artifact to s3 bucket from AWS CLI and our Tomcat server will get the same artifact from s3 bucket.
