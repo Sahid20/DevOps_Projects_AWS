@@ -219,6 +219,10 @@ CNAME record
 ![admin](https://user-images.githubusercontent.com/73986565/210998890-b4c53582-3f6a-4c36-9b05-fc0c7619324c.PNG)
 
 ### Step-11: Configure AutoScaling Group for Application Instances
+launch Configuration
+![launch_configuration](https://user-images.githubusercontent.com/73986565/211124527-84d81031-d77f-41ac-b2e7-2ea77264bcc0.PNG)
+
+
 - &nbsp;We will create an AMI from our App Instance.
 Next we will create a Launch template using the AMI created in above step for our ASG.
 Name: vprofile-app-LT
