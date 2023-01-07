@@ -196,8 +196,8 @@ healtcheck path : /login<br>
 Advanced health check settings<br>
 Override: 8080<br>
 Healthy threshold: 3<br>
-available instance: app01 (Include as pending below)<br>!
-[target_group](https://user-images.githubusercontent.com/73986565/211121319-1580dbb7-f809-435c-a3a3-263f6e67a157.PNG)
+available instance: app01 (Include as pending below)<br>
+![target_group](https://user-images.githubusercontent.com/73986565/211121319-1580dbb7-f809-435c-a3a3-263f6e67a157.PNG)
 
 
 - &nbsp;Now we will create our Load Balancer.<br>
