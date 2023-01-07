@@ -213,6 +213,9 @@ Select the certificate for HTTPS<br>
 - 
  We can securely connect to our application!
 ![admin](https://user-images.githubusercontent.com/73986565/210998890-b4c53582-3f6a-4c36-9b05-fc0c7619324c.PNG)
+
+CNAME record
+![cname_record](https://user-images.githubusercontent.com/73986565/211122807-74bc8a77-1977-44b5-b96b-2b2026c3458c.PNG)
 ### Step-11: Configure AutoScaling Group for Application Instances
 - &nbsp;We will create an AMI from our App Instance.
 Next we will create a Launch template using the AMI created in above step for our ASG.
