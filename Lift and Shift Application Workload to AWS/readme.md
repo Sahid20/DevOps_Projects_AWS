@@ -207,6 +207,7 @@ Select all AZs<br>
 SecGrp: vprofile-elb-secGrp<br>
 Listeners: HTTP, HTTPS<br>
 Select the certificate for HTTPS<br>
+![load_balancerr](https://user-images.githubusercontent.com/73986565/211122044-96dd9897-0c9d-49fc-bede-50d2d86019f6.PNG)
 ### Step-10: Create Route53 record for ELB endpoint
 - &nbsp;We will create an A record with alias to ALB so that we can use our domain name to reach our application.Lets check our application using our DNS.
 - 
