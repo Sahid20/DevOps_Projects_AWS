@@ -187,7 +187,7 @@ telnet db01.vprofile.in 3306<br>
 telnet mc01.vprofile.in 11211
 ![telnet_mc01](https://user-images.githubusercontent.com/73986565/211119192-576ed3f5-8998-4670-a9b0-e7dbf3120021.PNG)
 
-### Step-9: Setup LoadBalancer
+### Step-9: Setup LoadBalancer and DNS
 - &nbsp;- &nbsp;Before creating LoadBalancer , first we need to create Target Group.<br>
 Intances<br>
 Target Grp Name: vprofile-elb-TG<br>
