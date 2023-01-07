@@ -5,3 +5,7 @@ Default VPC<br>
 Route53 Public Registered Name<br>
 Maven<br>
 JDK8<br>
+# Flow of Execution
+Launch Ec2 Instaces for DB Initializing<br>
+Login to the instance and Inititialize RDS DB<br>
+  
