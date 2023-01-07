@@ -183,7 +183,9 @@ cat /var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/application.properties<br>
 We can validate network connectivity from server using telnet.<br>
 apt install telnet<br>
 telnet db01.vprofile.in 3306<br>
-
+![telnet_db01](https://user-images.githubusercontent.com/73986565/211119100-c0dd0ca2-521c-4cee-b708-a09098608016.PNG)
+telnet mc01.vprofile.in 11211
+![telnet_mc01](https://user-images.githubusercontent.com/73986565/211119192-576ed3f5-8998-4670-a9b0-e7dbf3120021.PNG)
 
 ### Step-9: Setup LoadBalancer
 - &nbsp;- &nbsp;Before creating LoadBalancer , first we need to create Target Group.<br>
