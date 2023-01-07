@@ -198,7 +198,7 @@ Override: 8080<br>
 Healthy threshold: 3<br>
 available instance: app01 (Include as pending below)<br>
 ![target_group](https://user-images.githubusercontent.com/73986565/211121319-1580dbb7-f809-435c-a3a3-263f6e67a157.PNG)
-
+![target_group_vprofile_app_tg](https://user-images.githubusercontent.com/73986565/211121704-01dc7fd2-7a35-4945-a220-4dc751ac5203.PNG)
 
 - &nbsp;Now we will create our Load Balancer.<br>
 vprofile-prod-elb<br>
