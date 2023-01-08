@@ -1,4 +1,4 @@
-# Project-4: Re-Architecting Web App on AWS Cloud[Cloud Native]
+# Project: Re-Architecting Web App on AWS Cloud[Cloud Native]
 # Pre-requisites:
 AWS Account<br>
 Default VPC<br>
