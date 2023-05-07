@@ -1,4 +1,4 @@
-# Project: Continuous Integration Using jenkins, Nexus, Sonarqube and Slack
+# Project: Continuous Integration Using Jenkins, Nexus, Sonarqube and Slack
 
 
 ## Pre-requisities:
