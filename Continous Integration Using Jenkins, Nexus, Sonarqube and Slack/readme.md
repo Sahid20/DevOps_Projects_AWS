@@ -357,3 +357,334 @@ Member repositories:
 - Go to browser, http://<public_ip_of_sonar_server>.
 
 - Login with username `admin` and password `admin`.
+
+
+### Step-5: Create a repository in Github
+
+- We need to create a private repository in the Github to be used with this project. 
+
+- The content will be cloned from below link:
+```sh
+git clone -b ci-jenkins git@github.com:Sahid20/vprofileproject-all.git
+```
+
+### Step-6: Build Job with Nexus Repo 
+
+- Our first job will be Build the Artifact from Source Code using Maven. We need JDK8 and Maven to be installed in jenkins to complete the job succesfully.
+
+- Since our application is using JDK8, we need to install Java8 in jenkins. `Manage Jenkins` -> `Global Tool Configuration`
+We will install JDK8 manually, and specify its PATH in here.
+```sh
+Under JDK -> Add JDK
+Name: OracleJDK8
+untick Install Automatically
+JAVA_HOME: < we will get after next step >
+```
+
+- Currently our jenkins has JDK-11 install, we can SSH into our jenkins server and install JDK-8. Then get the PATH to JDK-8 to replace in above step. So after installation we will see our `JAVA_HOME` for JDK-8 is `/usr/lib/jvm/java-8-openjdk-amd64`
+```sh
+sudo apt update -y
+sudo apt install openjdk-8-jdk -y
+sudo -i
+ls /usr/lib/jvm
+### we should get both jdk-11 and jdk-8 in this path ###
+java-1.11.0-openjdk-amd64  java-11-openjdk-amd64  openjdk-11
+java-1.8.0-openjdk-amd64   java-8-openjdk-amd64
+``` 
+
+- Next we will setup our Maven.
+```sh
+Name: MAVEN3
+version : keep same
+``` 
+
+- Next we need to add Nexus login credentials to Jenkins. Go to `Manage Jenkins` -> `Manage Credentials` ->  `Global` -> `Add Credentials`
+
+```sh
+username: admin
+password: <pwd_setup_for_nexus>
+ID: nexuslogin
+description: nexuslogin
+``` 
+
+- We will create Jenkinsfile for Build pipeline as below. The variables mentioned in pom.xml repository part and settings.xml will be declared in Jenkinsfile with their values to be used during execution. Update Pipeline file and push to GitHub.
+```sh
+pipeline {
+    agent any
+    tools {
+        maven "MAVEN3"
+        jdk "OracleJDK8"
+    }
+
+    environment {
+        SNAP_REPO = 'vprofile-snapshot'
+        NEXUS_USER = 'admin'
+        NEXUS_PASS = 'admin'
+        RELEASE_REPO = 'vprofile-release'
+        CENTRAL_REPO = 'vpro-maven-central'
+        NEXUSIP = '172.31.10.139'
+        NEXUSPORT = '8081'
+        NEXUS_GRP_REPO = 'vpro-maven-group'
+        NEXUS_LOGIN = 'nexuslogin'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn -s settings.xml -DskipTests install'
+            }
+        }
+    }
+}
+```
+
+- We will create a New Job in Jenkins with below properties:
+```sh
+Pipeline from SCM 
+Git
+URL: <url_from_project> I will use SSH link
+Crdentials: we will create github login credentials
+#### add Jenkins credentials for github ####
+Kind: SSH Username with private key
+ID: githublogin
+Description: githublogin
+Username: git
+Private key file: paste your private key here
+#####
+Branch: */ci-jenkins
+path: Jenkinsfile
+```
+
+- Error is not gone, we need to login jenkins server via SSH and complete host-key checking step. After below command, our host-key will be stored in `.ssh/known_hosts` file.Then error will be gone.
+```sh
+sudo -i
+sudo su - jenkins
+git ls-remote -h -- git@github.com:rumeysakdogan/vprociproject.git HEAD
+```
+
+- Now its Build time. Our build pipeline is successful!
+
+![vprofile_ci_pipeline2c](https://user-images.githubusercontent.com/73986565/236705080-f748eda7-0e9f-431e-a7e9-6c64752dec14.PNG)
+
+
+### Step-7: Setup GitHub Webhook and update Jenkins Job
+
+- In this step, we will add GitHub webhook to our repository so that after a new commit Build pipeline will be triggered automatically.
+
+- Go to Github repository, `Settings` -> `Webhooks` -> Add `JenkinsURL` with `/github-webhook/` at the end.
+![Webhook_Setup](https://user-images.githubusercontent.com/73986565/236705146-6d396e52-0086-4d28-ad82-c1aa60ecfcdc.PNG)
+
+- Next we will go to Jenkins and add below configuration to our `vprofile-ci-pipeline` jon.
+```sh
+Build Trigger: GitHub hook trigger for GITScm polling
+```
+
+- We can add a post action to our pipeline script and commit/push changes to GitHub.
+```sh
+stage('Build') {
+            steps {
+                sh 'mvn -s settings.xml -DskipTests install'
+            }
+            post {
+                success {
+                    echo "Now Archiving."
+                    archiveArtifacts artifacts: '**/*.war'
+                }
+            }
+        }
+
+stage('Test') {
+           steps {
+            sh 'mvn test'
+           }
+        }
+        
+        stage('Checkstyle Analysis'){
+            steps {
+                sh 'mvn -s settings.xml checkstyle:checkstyle'
+            }
+        }
+```
+
+- Our job is triggered automatically after `git push`. And build is successful.
+  
+![check_style](https://user-images.githubusercontent.com/73986565/236705341-be6c56f6-8d97-4a65-9964-224e0dd5230d.png)
+
+### Step-8: Code Analysis with SonarQube
+
+- The Unit test/Code Coverage reports are generated under Jenkins workspace target directory. But these reports are not human readable. We need a tool which can scan and analyze the coed and present it in human readable format in a Dashboard. We will use SonarQube solution of this problem. 
+Two things need to setup:
+ * SonarScanner tool in Jenkins to scan the code
+ * We need SonarQube information in jenkins so that Jenkins will know where to upload these reports
+
+- Lets start with SonarScanner tool configuration. Go to `Manage Jenkins` -> `Global Tool Configuration`
+```sh
+Add sonar scanner
+name: sonarscanner
+tick install automatically
+```
+- Next we need to go to `Configure System`, and find ` SonarQube servers` section
+```sh
+tick environment variables
+Add sonarqube
+Name: sonarserver
+Server URL: http://<private_ip_of_sonar_server>
+Server authentication token: we need to create token from sonar website
+```
+
+![](images/sonartoken.png)
+
+- We will add our sonar token to global credentials.
+```sh
+Kind: secret text
+Secret: <paste_token>
+name: sonartoken
+description: sonartoken
+```
+
+- We will add sonarQube code for our pipeline and commit/push changes to GitHub.
+```sh
+##new environment variables to be added to environment##
+SONARSERVER = 'sonarserver'
+SONARSCANNER = 'sonarscanner'
+
+##new stages to be added##
+ stage('CODE ANALYSIS with SONARQUBE') {
+          
+          environment {
+             scannerHome = tool "${SONARSCANNER}"
+          }
+
+          steps {
+            withSonarQubeEnv("${SONARSERVER}") {
+               sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
+                   -Dsonar.projectName=vprofile-repo \
+                   -Dsonar.projectVersion=1.0 \
+                   -Dsonar.sources=src/ \
+                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
+                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+            }
+
+          }
+```
+
+- Our job is completed succesfully.
+
+![check_style](https://user-images.githubusercontent.com/73986565/236705341-be6c56f6-8d97-4a65-9964-224e0dd5230d.png)
+
+- We can see quality gate results in SonarQube server.
+![vprofile_quality_gate](https://user-images.githubusercontent.com/73986565/236707412-53e51d14-3484-44f8-a1d0-c26894cc8426.PNG)
+![](images/scanning-complete.png)
+
+![SonarQube](https://user-images.githubusercontent.com/73986565/236707524-4841860c-3743-4924-8d4f-e2b7f22f397c.PNG)
+
+- We can create our own Quality Gates and add to our project as well. click `Quality gate` -> `Create`. add `Condition`. You can give `Bug is greater than 80` then Save it.
+click on projectname it will have a dropdown, click `Quality Gate` and choose the new Quality gate you have created.  
+
+Next we will create a Webhook in SonarQube to send the analysis results to jenkins.
+
+```sh
+http://<private_ip_of_jenkins>:8080/sonarqube-webhook
+```
+![](images/sonar-webhooks.png)
+
+- We will add below stage to our pipeline and commit changes to Github.
+```sh
+ stage('QUALITY GATE') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+               waitForQualityGate abortPipeline: true
+            }
+            }
+}
+```
+
+- We can see BUILD is successful!
+
+![sonar_analysis](https://user-images.githubusercontent.com/73986565/236705585-462110bc-b129-4e96-a462-85c271365420.png)
+
+### Step-9: Publish Artifact to Nexus Repo
+
+- In this step, we will automate process of publishing latest artifact to Nexus repository after successful build. 
+We need to add Build-Timestamp to artifact name to get unique artifact each time. We can go to `Manage Jenkins` -> `Configure System` under `Build Timestamp` we can update the pattern as our wish.
+
+```sh
+yy-MM-dd_HHmm
+```
+
+- We will add below stage to our pipeline and see results.
+```sh
+stage('UPLOAD ARTIFACT') {
+                steps {
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: "${NEXUSIP}:${NEXUSPORT}",
+                        groupId: 'QA',
+                        version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
+                        repository: "${RELEASE_REPO}",
+                        credentialsId: ${NEXUS_LOGIN},
+                        artifacts: [
+                            [artifactId: 'vproapp' ,
+                            classifier: '',
+                            file: 'target/vprofile-v2.war',
+                            type: 'war']
+                        ]
+                    )
+                }
+        }
+```
+
+- Build is successful.
+
+  ![vprofile_ci_pipeline2](https://user-images.githubusercontent.com/73986565/236705743-334f5f0a-1fcb-4c52-9d15-3513d5caa789.PNG)
+
+
+- Artifact is uploaded to Nexus repository.
+
+
+
+![Artifact_upload_to_nexus_repo](https://user-images.githubusercontent.com/73986565/236707162-e70b9bae-5207-4062-aca2-4e9dc1570eba.PNG)
+### Step-10: Slack Notification
+
+- We will Login to slack and create a workspace by following the prompts. Then we will create a channel `jenkins-cicd` in our workspace.
+
+- Next we need to Add jenkins app to slack. Search in Google with `Slack apps`. Then search for `jenkins` add to Slack. We will choose the channel `jenkins-cicd`. It will give us to setup instructions, from there copy `Integration token credential ID` .
+
+![](images/slack-apps.png)
+
+- We will go to Jenkins dashboard `Configure system` -> `Slack`
+```sh
+Workspace:  example (in the workspace url example.slack.com)
+credential: slacktoken 
+default channel: #jenkins-cicd
+```
+- We will add our sonar token to global credentials.
+```sh
+Kind: secret text
+Secret: <paste_token>
+name: slacktoken
+description: slacktoken
+```
+
+![slack-apps](https://user-images.githubusercontent.com/73986565/236707975-597f9eb3-e321-4941-a62e-5704dbf97af3.png)
+
+- We will add below part to our Jenkinsfile in the same level with stages and push our changes.
+```sh
+post{
+        always {
+            echo 'Slack Notifications'
+            slackSend channel: '#jenkinscicd',
+                color: COLOR_MAP[currentBuild.currentResult],
+                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        }
+    }
+```
+-  We get our Notification from slack.
+
+
+
+![slack-notifications2](https://user-images.githubusercontent.com/73986565/236708034-2071cbc3-3091-49cb-a30d-ffd603bb1427.png)
+ 
