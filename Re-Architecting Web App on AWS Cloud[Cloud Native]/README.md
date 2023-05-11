@@ -66,6 +66,7 @@ Additional Configuration
 Initial DB Name: accounts
 Keep the rest default or you may add as your own preference
 ```
+![rds_parameter_group](https://github.com/Sahid20/DevOps_Projects_AWS/assets/73986565/5473b975-6058-472f-99c5-b202b976c51a)
 
 - After clicking `Create` button, you will see a popup. Click `View credential details` and note down auto-generated db password. We will use it in our application config files.
 
@@ -119,7 +120,8 @@ VPC: use default
 SEcGrp: vprofile-backend-SG
 ```
 
-- Do not forget to note down tour username/pwd. You won't be able to see your Password again from console.
+![elastic_beanstalk](https://github.com/Sahid20/DevOps_Projects_AWS/assets/73986565/06fae1f2-d53b-4b35-9548-eded9f959af5)
+
 
 ### Step-5: DB Initialization
 
@@ -153,7 +155,7 @@ After updating rule, try to connect with below command:
 mysql -h vprofile-rds-mysql.chrgxmhxkprk.us-east-1.rds.amazonaws.com -u admin -p<db_password>
 mysql> show databases;
 ```
-
+![databases](https://github.com/Sahid20/DevOps_Projects_AWS/assets/73986565/56fafeaf-4040-43ab-81f4-b7f610671c4d)
 - Next we will clone our source code here to use script to initialize our database. After these commands we should be able to see 2 tables `role`, `user`, and `user_role`.
 
 ```sh
@@ -229,7 +231,7 @@ rabbitmq.address
 rabbitmq.username
 rabbitmq.password
 ```
-
+![application_property](https://github.com/Sahid20/DevOps_Projects_AWS/assets/73986565/3b079b8a-6df7-4a6a-b0a7-8756aa53393b)
 - Go to root directory of project to the same level with `pom.xml` file. Run below command to build the artifact.
 ```sh
 mvn install
