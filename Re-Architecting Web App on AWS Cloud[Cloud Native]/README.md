@@ -243,11 +243,12 @@ mvn install
 
 - Now we will select our uploaded application and click Deploy.
 
-![](images/app-deployed.png)
+![elastic_beanstalk_upload](https://github.com/Sahid20/DevOps_Projects_AWS/assets/73986565/569d39db-498f-4131-b349-2c30925f2c84)
+
 
 - Let's check if our application deployed successfully.
 
-![](images/app-running-in-bs.png)
+
 ![](images/app-running-from-beanstalk.png)
 
 ### Step-7: Create DNS Record in Route53 for Application
