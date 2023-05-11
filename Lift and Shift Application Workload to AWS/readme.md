@@ -242,7 +242,5 @@ Target Tracking-CPU Utilization 50
 If we terminate any instances we will see ASG will create a new one using LT that we created.
 ### Step-12: Clean-up
 - &nbsp;Delete all resources we created to avoid any charges from AWS.
-
-###### Resource
-Course: DevOps Projects | 20 Real Time DevOps Projects 
+ 
 
