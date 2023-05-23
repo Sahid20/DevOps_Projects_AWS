@@ -1,4 +1,4 @@
-# Project-11: Continuous Delivery & Configuration Management (Jenkins&Ansible)
+# Project: Continuous Delivery & Configuration Management (Jenkins&Ansible)
 
 
 ![](images/Project-11.png)
